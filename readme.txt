@@ -1,10 +1,15 @@
 =================================
-   Luminous Arc 3 Tools v 0.45
+   Luminous Arc 3 Tools v 0.46
 =================================
 
 -------------
  Changelog
 -------------
+v0.46
+- improved format for easy editing (forEdit) in the text field,
+  line that begins with semi-colon symbol ";" is ignored now (comment line)
+- formDebug minor bugfix (if the "str" substring in the file name not present)
+
 v0.45
 - ext2edit and formDebug improved - more accurate filenames recognizing
 - formDebug improved - strana, strsel file supported 
