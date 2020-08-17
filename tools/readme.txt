@@ -1,5 +1,5 @@
 ===============================================================
-  Luminous Arc 3 Script Tools for character-pair font (v0.45)
+  Luminous Arc 3 Script Tools for character-pair font (v0.46)
 ===============================================================
 
 Usage:
@@ -86,7 +86,7 @@ Notes
   strsel.bin, strsana.bin (selection files) differ a bit:
   - first string is empty
   - second string sometimes contain symbol "-" 
-  - you can place only 34 characters in the second string of the strsel.bin structure
+  - you can place only 36 characters in the second string of the strsel.bin structure
 
   first line of extracted file *.txt is a textheader (16 bytes)
 
@@ -96,6 +96,7 @@ Notes
   - to type many lines in one entry and clear a box before the first newline ($n) and
     to continue typing ("text $p text text $p" sequence) put "$p" at the end of line.	
   - "~-" indicate end of the single entry (double string structure).
+  - to comment in second pool of entry use a semi-colon symbol at the beginning of line
 
 Available default font for character-pairs (80 characters) :
 
@@ -104,6 +105,11 @@ Available default font for character-pairs (80 characters) :
 -------------
 changelog
 -------------
+v0.46
+- improved format for easy editing (forEdit) in the text field,
+  line that begins with semi-colon symbol ";" is ignored now (comment line)
+- formDebug minor bugfix (if the "str" substring in the file name not present)
+
 v0.45
 - ext2edit and formDebug improved - more accurate filenames recognizing
 - formDebug improved - strana, strsel file supported 

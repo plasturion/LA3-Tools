@@ -37,12 +37,26 @@ int main(int argc, char *argv[]){
         bool secondZero = false;
         bool wasNewline = false;
         for(pr = 16, pw = 0 ; pr < lSize; pr++, pw++){
+            //ignore commment line
+            if(buffer[pr]==';' && buffer[pr-1]==0x0A){
+                for(++pr; (pr < lSize ) && (buffer[pr] != 0x0A); pr++);//ignore the line
+                pw--; //stop writing pointer
+                continue;
+            }
+
             //in the main loop read the first string of the structure
             dest[pw] = buffer[pr];
             if (buffer[pr] == 0x0A){
                 if(secondZero){
+
                     //auto formatting the second string (stop reading at "~-" sequence (guarding enough ok)
                     for(wasNewline = false; (!(buffer[pr]== '~' && buffer[pr+1]== '-' )) && (pr<lSize); pr++, pw++){
+                        //if the line begins with a semi-colon treat as a comment
+                        if(buffer[pr]==';' && buffer[pr-1]==0x0A){
+                            for(++pr; (pr < lSize ) && (buffer[pr] != 0x0A); pr++);//ignore the line
+                            pw--; //stop writing pointer
+                            continue;
+                        }
                         if(buffer[pr] == 0x0A){
                             //if you want to break windows earlier you can do it typing $p at the end of line
                             if(buffer[pr-2]=='$' && buffer[pr-1]=='p'){
@@ -70,11 +84,16 @@ int main(int argc, char *argv[]){
                     //change last special code from $n to $p
                     if(dest[pw-1] == 'n' && dest[pw-2]== '$')
                         dest[pw-1] = 'p';
-                    //read and ignore the line
+                    //read and ignore the line of the end of structure entry "~-----"
                     for(++pr; (pr < lSize ) && (buffer[pr] != 0x0A); pr++);
                     secondZero = false;
                 }else {
-                    //at the end of the first string read all of line of and ignore it
+
+                    //if the line begins with a semi-colon treat as a comment
+                    while(buffer[pr+1]==';' && pr < lSize)
+                        for(++pr; (pr < lSize ) && (buffer[pr] != 0x0A); pr++);//ignore the line
+
+                    //at the end of the first string read all of the next '---' line of and ignore it
                     for(++pr; ( pr<lSize ) && (buffer[pr] != 0x0A); pr++);
                     secondZero = true;
                 }

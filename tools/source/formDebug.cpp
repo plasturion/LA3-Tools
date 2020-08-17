@@ -1,13 +1,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-//#include <ctime>
 
     int pos=0,fileSize;
     unsigned char *buffer, dest[500000];
     char fileName[10]={};
     size_t result;
-    unsigned char sign[82]=" !\"#%&'()*+,-./:=?0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     int pw=0,pr=0,liner=1;
     long lSize;
     bool selectionFile = false;
@@ -36,7 +34,6 @@ void printFileLineID(int mode){
 
 int main(int argc, char *argv[]){
 
-    //srand (time(NULL));
     FILE *p = NULL;
     FILE *pout = NULL;
 
@@ -75,13 +72,18 @@ int main(int argc, char *argv[]){
                     break;
                 }
             //now change direction and find first dot
-            for( k = i; k < length-1; k++){
-                if(argv[2][k]=='.'){
-                    fileSize = k - i;
-                    strncpy(fileName,argv[2]+i,(fileSize<=6)?fileSize:6);
-                    break;
+            if(i < 0) {
+                fileSize = 4;
+                strcpy(fileName,"Line");
+            } else
+                for( k = i; k < length-1; k++){
+                    if(argv[2][k]=='.'){
+                        fileSize = k - i;
+                        strncpy(fileName,argv[2]+i,(fileSize<=6)?fileSize:6);
+                        break;
+                    }
                 }
-            }
+
         } else {
             fileSize = 4;
             strcpy(fileName,"Line");
@@ -103,11 +105,24 @@ int main(int argc, char *argv[]){
                     }
                     continue;
             }
+
+            //ignore comment line
+            if(buffer[pr]==';' && buffer[pr-1]==0x0A){
+                for(++pr; (pr < lSize ) && (buffer[pr] != 0x0A); pr++);//ignore the line
+                pw--; //stop writing pointer
+                continue;
+            }
             dest[pw] = buffer[pr];
             if (buffer[pr] == 0x0A){
 
                     //auto formatting the second string (stop reading at "~-" sequence (guarding enough ok)
                     for(wasNewline = false; (!(buffer[pr]== '~' && buffer[pr+1]== '-' )) && (pr<lSize); pr++, pw++){
+                        //if the line begins with a semi-colon treat as a comment
+                        if(buffer[pr]==';' && buffer[pr-1]==0x0A){
+                            for(++pr; (pr < lSize ) && (buffer[pr] != 0x0A); pr++);//ignore the line
+                            pw--; //stop writing pointer
+                            continue;
+                        }
                         if(buffer[pr] == 0x0A){
                             //if you want to break windows earlier you can do it typing $p at the end of line
                             if(buffer[pr-2]=='$' && buffer[pr-1]=='p'){
@@ -131,22 +146,12 @@ int main(int argc, char *argv[]){
                         dest[pw] = buffer [ pr];
                     }
                     pw -= 2;
-                    //if(selectionFile && !nothing)
-                    //    pw -= fileSize + 5; //cut the end of selection file (make sure it'll fit)
-                    //dest [pw]= 0x0A;
+
                     //change last special code from $n to $p
                     if(dest[pw-1] == 'n' && dest[pw-2] == '$')
                         dest[pw-1] = 'p';
                     pw--;
-/*-- random strings ------------
-                    for(int i=0; i<40;i++)
-                        dest[++pw] = sign[ rand() % 80];
-                    dest[++pw] = '$';
-                    dest[++pw] = 'n';
-                    for(int i=0; i<32;i++)
-                        dest[++pw] = sign[ rand() % 80];
 
-------------------------------*/
                     dest[++pw]= 0x0A;
 
                     //read and ignore the line
