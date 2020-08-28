@@ -1,0 +1,1 @@
+ ..\tools\encoder.exe menuList.txt menuListEncoded.txt

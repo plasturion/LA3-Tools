@@ -1,10 +1,14 @@
 =================================
-   Luminous Arc 3 Tools v 0.46
+   Luminous Arc 3 Tools v 0.47
 =================================
 
 -------------
  Changelog
 -------------
+v0.47
+- added new tools (arm9.bin dumper/inserter) for menu text
+- added exception for c-type string formatting code "%s" (encoder)
+
 v0.46
 - improved format for easy editing (forEdit) in the text field,
   line that begins with semi-colon symbol ";" is ignored now (comment line)
