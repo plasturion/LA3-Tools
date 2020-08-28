@@ -141,6 +141,11 @@ int main(int argc, char *argv[]){
                 dest[ ++pw ] = buffer[ ++pr ];
             }
             continue;
+        //or check if is cstring type formatting %s
+        }else if(buffer[pr]=='%' && buffer[pr+1]=='s' ){
+            dest[ pw ] = buffer[ pr ];
+            dest[ ++pw ] = buffer[ ++pr ];
+            continue;
 
         //if first byte start with ascii character
         }else if( buffer[pr] < 0x80 && buffer[pr] >= 0x20 ){
@@ -151,8 +156,8 @@ int main(int argc, char *argv[]){
                     continue;
                 }
             }
-            //if second one is not ascii or it's white space or control code '$' just make pair with space
-            if( buffer[pr+1] > 0x80 || buffer[pr+1] <0x20 || buffer[pr+1] == '$'){
+            //if second one is not ascii or it's white space or control code '$' or string - %s just make pair with space
+            if( buffer[pr+1] > 0x80 || buffer[pr+1] <0x20 || buffer[pr+1] == '$' || (buffer[pr+1]=='%' && buffer[pr+2]=='s')){
                 zn1  = ((field[  buffer [ pr ] ][ 0x20 ] & 0xFF00) >> 8);
                 zn2  = (field[  buffer [ pr ] ][ 0x20 ] & 0xFF);
                 dest[pw]   = zn1;
